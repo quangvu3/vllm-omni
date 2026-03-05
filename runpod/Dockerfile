@@ -19,5 +19,6 @@ ENV VLLM_WORKER_MULTIPROC_METHOD=spawn
 ENV VLLM_PORT=8000
 ENV MODEL_NAME=Tongyi-MAI/Z-Image-Turbo
 ENV GPU_MEMORY_UTILIZATION=0.95
+ENV TRANSFORMER_MODEL=linoyts/beyond-reality-z-image-diffusers
 
 CMD ["python", "/workspace/handler.py"]
