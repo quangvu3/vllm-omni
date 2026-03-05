@@ -49,7 +49,7 @@ def parse_args() -> argparse.Namespace:
         help="Default image width (must match one of the supported presets).",
     )
     parser.add_argument("--default-prompt", default="a cup of coffee on the table", help="Initial prompt shown in UI.")
-    parser.add_argument("--default-seed", type=int, default=42, help="Initial seed shown in UI.")
+    parser.add_argument("--default-seed", type=int, default=-1, help="Initial seed shown in UI. Use -1 for a random seed each generation.")
     parser.add_argument("--default-cfg-scale", type=float, default=4.0, help="Initial CFG scale shown in UI.")
     parser.add_argument(
         "--num-inference-steps",
@@ -107,6 +107,8 @@ def build_demo(args: argparse.Namespace) -> gr.Blocks:
             num_images = int(num_images_choice)
         except (TypeError, ValueError) as exc:
             raise gr.Error("Seed, inference steps, and number of images must be valid integers.") from exc
+        if seed == -1:
+            seed = int(torch.randint(0, 2**32, (1,)).item())
         if num_steps <= 0:
             raise gr.Error("Inference steps must be a positive integer.")
         if num_images not in {1, 2, 3, 4}:

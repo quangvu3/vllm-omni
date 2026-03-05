@@ -21,4 +21,5 @@ ENV MODEL_NAME=Tongyi-MAI/Z-Image-Turbo
 ENV GPU_MEMORY_UTILIZATION=0.95
 ENV TRANSFORMER_MODEL=linoyts/beyond-reality-z-image-diffusers
 
+ENTRYPOINT []
 CMD ["python", "/workspace/handler.py"]

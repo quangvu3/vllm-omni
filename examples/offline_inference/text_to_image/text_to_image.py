@@ -45,7 +45,7 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="negative prompt for classifier-free conditional guidance.",
     )
-    parser.add_argument("--seed", type=int, default=142, help="Random seed for deterministic results.")
+    parser.add_argument("--seed", type=int, default=-1, help="Random seed for deterministic results. Use -1 (default) for a random seed.")
     parser.add_argument(
         "--cfg-scale",
         type=float,
@@ -229,7 +229,9 @@ def parse_args() -> argparse.Namespace:
 
 def main():
     args = parse_args()
-    generator = torch.Generator(device=current_omni_platform.device_type).manual_seed(args.seed)
+    seed = args.seed if args.seed != -1 else torch.randint(0, 2**32, (1,)).item()
+    print(f"  Seed: {seed}")
+    generator = torch.Generator(device=current_omni_platform.device_type).manual_seed(seed)
     use_nextstep = is_nextstep_model(args.model)
 
     cache_config = None
