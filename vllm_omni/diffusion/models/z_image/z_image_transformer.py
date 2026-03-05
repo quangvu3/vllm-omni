@@ -997,6 +997,9 @@ class ZImageTransformer2DModel(CachedTransformer):
                 weight_loader(param, loaded_weight, shard_id)
                 break
             else:
+                if name not in params_dict:
+                    logger.warning("Skipping unknown weight key: %s", name)
+                    continue
                 param = params_dict[name]
                 weight_loader = getattr(param, "weight_loader", default_weight_loader)
                 weight_loader(param, loaded_weight)

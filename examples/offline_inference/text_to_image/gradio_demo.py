@@ -25,6 +25,18 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Gradio demo for Qwen-Image offline inference.")
     parser.add_argument("--model", default="Qwen/Qwen-Image", help="Diffusion model name or local path.")
     parser.add_argument(
+        "--transformer-model",
+        type=str,
+        default=None,
+        dest="transformer_model",
+        help=(
+            "Optional HF model ID or local path to load transformer weights from "
+            "(e.g. 'linoyts/beyond-reality-z-image-diffusers'). "
+            "Other pipeline components (VAE, text encoder, tokenizer, scheduler) "
+            "are still loaded from the base model."
+        ),
+    )
+    parser.add_argument(
         "--height",
         type=int,
         default=1328,
@@ -60,7 +72,7 @@ def parse_args() -> argparse.Namespace:
 
 
 @lru_cache(maxsize=1)
-def get_omni(model_name: str) -> Omni:
+def get_omni(model_name: str, transformer_model: str | None = None) -> Omni:
     # Enable VAE memory optimizations on NPU
     vae_use_slicing = current_omni_platform.is_npu()
     vae_use_tiling = current_omni_platform.is_npu()
@@ -68,11 +80,12 @@ def get_omni(model_name: str) -> Omni:
         model=model_name,
         vae_use_slicing=vae_use_slicing,
         vae_use_tiling=vae_use_tiling,
+        **({"transformer_model": transformer_model} if transformer_model else {}),
     )
 
 
 def build_demo(args: argparse.Namespace) -> gr.Blocks:
-    omni = get_omni(args.model)
+    omni = get_omni(args.model, args.transformer_model)
 
     def run_inference(
         prompt: str,
@@ -178,7 +191,10 @@ def build_demo(args: argparse.Namespace) -> gr.Blocks:
         """,
     ) as demo:
         gr.Markdown("# vLLM-Omni Web Serving Demo")
-        gr.Markdown(f"**Model:** {args.model}")
+        model_label = args.model
+        if args.transformer_model:
+            model_label += f" (transformer: {args.transformer_model})"
+        gr.Markdown(f"**Model:** {model_label}")
 
         with gr.Row():
             with gr.Column(scale=1, elem_classes="left-column"):

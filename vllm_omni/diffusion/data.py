@@ -350,6 +350,12 @@ class OmniDiffusionConfig:
 
     # pipeline_config: PipelineConfig = field(default_factory=PipelineConfig, repr=False)
 
+    # Optional alternate HF repo or local path for transformer weights.
+    # When set, transformer weights are loaded from here instead of
+    # <base_model>/transformer. All other components (VAE, text encoder,
+    # tokenizer, scheduler) are still loaded from the base model.
+    transformer_model: str | None = None
+
     # LoRA parameters
     lora_path: str | None = None
     lora_scale: float = 1.0

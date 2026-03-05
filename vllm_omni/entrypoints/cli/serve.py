@@ -320,6 +320,18 @@ class OmniServeCommand(CLISubcommand):
             help="Number of devices for CFG parallel computation for diffusion models. "
             "Equivalent to setting DiffusionParallelConfig.cfg_parallel_size.",
         )
+        omni_config_group.add_argument(
+            "--transformer-model",
+            type=str,
+            default=None,
+            dest="transformer_model",
+            help=(
+                "Optional HF model ID or local path to load transformer weights from "
+                "(e.g. 'linoyts/beyond-reality-z-image-diffusers'). "
+                "Other pipeline components (VAE, text encoder, tokenizer, scheduler) "
+                "are still loaded from the base model."
+            ),
+        )
 
         # Default sampling parameters
         omni_config_group.add_argument(

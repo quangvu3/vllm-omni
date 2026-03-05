@@ -9,6 +9,8 @@ nav:
       - Image Generation: serving/image_generation_api.md
       - Image Edit: serving/image_edit_api.md
       - Text to Speech: serving/speech_api.md
+    - Deployment:
+      - RunPod Serverless: serving/runpod_deployment.md
   - Examples:
     - examples/README.md
     - Offline Inference:

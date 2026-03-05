@@ -171,6 +171,17 @@ def parse_args() -> argparse.Namespace:
         help="Number of GPUs used for tensor parallelism (TP) inside the DiT.",
     )
     parser.add_argument(
+        "--transformer-model",
+        type=str,
+        default=None,
+        help=(
+            "Optional HF model ID or local path to load transformer weights from "
+            "(e.g. 'linoyts/beyond-reality-z-image-diffusers'). "
+            "Other pipeline components (VAE, text encoder, tokenizer, scheduler) "
+            "are still loaded from the base model."
+        ),
+    )
+    parser.add_argument(
         "--lora-path",
         type=str,
         default=None,
@@ -290,6 +301,7 @@ def main():
 
     omni_kwargs = {
         "model": args.model,
+        **({"transformer_model": args.transformer_model} if args.transformer_model else {}),
         "enable_layerwise_offload": args.enable_layerwise_offload,
         "vae_use_slicing": args.vae_use_slicing,
         "vae_use_tiling": args.vae_use_tiling,

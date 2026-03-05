@@ -122,6 +122,7 @@ python text_to_image.py \
 - `--cfg-parallel-size`: set it to 2 to enable CFG Parallel. See more examples in [`user_guide`](../../../docs/user_guide/diffusion_acceleration.md#using-cfg-parallel).
 - `--enable-cpu-offload`: enable CPU offloading for diffusion models.
 - `--guidance-scale`: classifier-free guidance scale.
+- `--transformer-model`: optional HF repo or local path to load transformer weights from (see below).
 
 **NextStep-1.1 specific:**
 - `--guidance-scale-2`: secondary guidance scale, e.g. image-level CFG (default: 1.0).
@@ -132,6 +133,26 @@ python text_to_image.py \
 > ℹ️ If you encounter OOM errors, try using `--vae-use-slicing` and `--vae-use-tiling` to reduce memory usage.
 
 > ℹ️ Qwen-Image currently publishes best-effort presets at `1328x1328`, `1664x928`, `928x1664`, `1472x1140`, `1140x1472`, `1584x1056`, and `1056x1584`. Adjust `--height/--width` accordingly for the most reliable outcomes.
+
+## Alternate Transformer (Beyond Reality fine-tune)
+
+`linoyts/beyond-reality-z-image-diffusers` is a fine-tuned transformer for
+`Tongyi-MAI/Z-Image-Turbo` that produces highly photorealistic results. Pass
+`--transformer-model` to load its weights while keeping all other pipeline
+components (VAE, text encoder, tokenizer, scheduler) from the base model.
+
+Recommended settings: `--guidance-scale 0.0` and `--num-inference-steps 10`.
+
+```bash
+python text_to_image.py \
+  --model Tongyi-MAI/Z-Image-Turbo \
+  --transformer-model linoyts/beyond-reality-z-image-diffusers \
+  --prompt "a photorealistic autumn fox" \
+  --guidance-scale 0.0 \
+  --num-inference-steps 10 \
+  --seed 42 \
+  --output outputs/beyond_reality.png
+```
 
 ## LoRA
 

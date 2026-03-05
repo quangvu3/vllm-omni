@@ -152,10 +152,15 @@ class ZImagePipeline(nn.Module):
     ):
         super().__init__()
         self.od_config = od_config
+        transformer_src = od_config.transformer_model or od_config.model
+        # When loading from a standalone transformer repo (e.g. linoyts/beyond-reality-z-image-diffusers),
+        # the safetensors live at the root (no subfolder). When loading from the base model, they're
+        # under transformer/.
+        transformer_subfolder = "transformer" if od_config.transformer_model is None else None
         self.weights_sources = [
             DiffusersPipelineLoader.ComponentSource(
-                model_or_path=od_config.model,
-                subfolder="transformer",
+                model_or_path=transformer_src,
+                subfolder=transformer_subfolder,
                 revision=None,
                 prefix="transformer.",
                 fall_back_to_pt=True,
