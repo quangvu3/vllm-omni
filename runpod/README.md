@@ -34,12 +34,22 @@ chmod +x runpod/build_and_push.sh
   --tag      v1.0.0
 ```
 
-**Build arguments** (override with `--build-arg`):
+**Build arguments** (pass with `--build-arg KEY=VALUE`, repeatable):
 
-| ARG | Default |
-|---|---|
-| `VLLM_BASE_IMAGE` | `vllm/vllm-openai` |
-| `VLLM_BASE_TAG` | `v0.16.0` |
+| ARG | Default | Description |
+|---|---|---|
+| `VLLM_BASE_IMAGE` | `vllm/vllm-openai` | Base image repository |
+| `VLLM_BASE_TAG` | `v0.16.0` | Base image tag |
+
+```bash
+# Example: override the base image tag
+./runpod/build_and_push.sh \
+  --registry docker.io/YOURNAME \
+  --image    z-image-realism-runpod \
+  --tag      v1.0.0 \
+  --build-arg VLLM_BASE_TAG=v0.8.5 \
+  --push
+```
 
 First build takes 15–20 minutes. Subsequent builds are fast thanks to layer caching.
 

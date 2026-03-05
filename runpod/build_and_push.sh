@@ -2,13 +2,14 @@
 # Build (and optionally push) the Z-Image RunPod Docker image.
 #
 # Usage:
-#   ./runpod/build_and_push.sh --registry docker.io/yourname --tag v1.0.0 [--image z-image-realism-runpod] [--push]
+#   ./runpod/build_and_push.sh --registry docker.io/yourname --tag v1.0.0 [--image z-image-realism-runpod] [--push] [--build-arg KEY=VALUE ...]
 #
 # Options:
 #   --registry  <registry/namespace>   e.g. docker.io/yourname  (required)
 #   --image     <image-name>           default: z-image-realism-runpod
 #   --tag       <tag>                  default: latest
 #   --push                             push both :<tag> and :latest after build
+#   --build-arg <KEY=VALUE>            pass a build arg to docker build (repeatable)
 #   --help                             show this message
 
 set -euo pipefail
@@ -20,16 +21,18 @@ REGISTRY=""
 IMAGE="z-image-realism-runpod"
 TAG="latest"
 PUSH=false
+BUILD_ARGS=()
 
 # ---------------------------------------------------------------------------
 # Argument parsing
 # ---------------------------------------------------------------------------
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --registry)  REGISTRY="$2";  shift 2 ;;
-        --image)     IMAGE="$2";     shift 2 ;;
-        --tag)       TAG="$2";       shift 2 ;;
-        --push)      PUSH=true;      shift   ;;
+        --registry)   REGISTRY="$2";                        shift 2 ;;
+        --image)      IMAGE="$2";                           shift 2 ;;
+        --tag)        TAG="$2";                             shift 2 ;;
+        --push)       PUSH=true;                            shift   ;;
+        --build-arg)  BUILD_ARGS+=("--build-arg" "$2");    shift 2 ;;
         --help)
             sed -n '2,12p' "$0"
             exit 0
@@ -66,6 +69,7 @@ echo "==> Image         : ${TAGGED_IMAGE}"
 docker build \
     -f "${SCRIPT_DIR}/Dockerfile" \
     -t "${TAGGED_IMAGE}" \
+    "${BUILD_ARGS[@]}" \
     "${REPO_ROOT}"
 
 # Always tag :latest as well (skip if tag IS latest to avoid duplicate work).
