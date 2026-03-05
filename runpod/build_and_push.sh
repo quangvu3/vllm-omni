@@ -2,11 +2,11 @@
 # Build (and optionally push) the Z-Image RunPod Docker image.
 #
 # Usage:
-#   ./runpod/build_and_push.sh --registry docker.io/yourname --tag v1.0.0 [--image z-image-runpod] [--push]
+#   ./runpod/build_and_push.sh --registry docker.io/yourname --tag v1.0.0 [--image z-image-realism-runpod] [--push]
 #
 # Options:
 #   --registry  <registry/namespace>   e.g. docker.io/yourname  (required)
-#   --image     <image-name>           default: z-image-runpod
+#   --image     <image-name>           default: z-image-realism-runpod
 #   --tag       <tag>                  default: latest
 #   --push                             push both :<tag> and :latest after build
 #   --help                             show this message
@@ -17,7 +17,7 @@ set -euo pipefail
 # Defaults
 # ---------------------------------------------------------------------------
 REGISTRY=""
-IMAGE="z-image-runpod"
+IMAGE="z-image-realism-runpod"
 TAG="latest"
 PUSH=false
 
